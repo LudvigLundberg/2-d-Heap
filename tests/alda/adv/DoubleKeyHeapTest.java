@@ -3,6 +3,9 @@ package alda.adv;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 import static org.junit.Assert.*;
 
 public class DoubleKeyHeapTest {
@@ -49,8 +52,106 @@ public class DoubleKeyHeapTest {
         doubleHeap.insert(new DoubleKeyIntegerPair(1,2));
         doubleHeap.insert(new DoubleKeyIntegerPair(2,1));
 
-        
+
         assertTrue(doubleHeap.pullSecondKey().equals(new DoubleKeyIntegerPair(2,1)));
         assertTrue(doubleHeap.pullFirstKey().equals(new DoubleKeyIntegerPair(1,2)));
+    }
+
+    @Test
+    public void pullSecondWithIndex1(){
+        assertTrue(doubleHeap.pullFirstKey().equals(new DoubleKeyIntegerPair(1,100)));
+        assertTrue(doubleHeap.pullSecondKey().equals(new DoubleKeyIntegerPair(100,1)));
+        assertEquals(doubleHeap.size(), 4);
+
+        doubleHeap.insert(new DoubleKeyIntegerPair(1,1));
+        assertTrue(doubleHeap.pullSecondKey().equals(new DoubleKeyIntegerPair(1,1)));
+
+        doubleHeap.insert(new DoubleKeyIntegerPair(1,1));
+        assertTrue(doubleHeap.pullFirstKey().equals(new DoubleKeyIntegerPair(1,1)));
+    }
+
+    @Test
+    public void insertionOrderPullFirst(){
+        doubleHeap = new DoubleKeyHeap<>();
+        DoubleKeyHeap<DoubleKeyIntegerPair> doubleHeap2 = new DoubleKeyHeap<>();
+
+        for(int i = 1; i < 1000; i++){
+            doubleHeap.insert(new DoubleKeyIntegerPair(i,i));
+        }
+        for(int i = 999; i > 0; i--){
+            doubleHeap2.insert(new DoubleKeyIntegerPair(i,i));
+        }
+        assertEquals(doubleHeap.size(), doubleHeap2.size());
+
+
+
+
+
+        for(int i = 1 ; i < 999; i++){
+            assertEquals(doubleHeap.pullFirstKey(), doubleHeap2.pullFirstKey());
+        }
+    }
+
+    @Test
+    public void insertionOrderPullSecond(){
+        doubleHeap = new DoubleKeyHeap<>();
+        DoubleKeyHeap<DoubleKeyIntegerPair> doubleHeap2 = new DoubleKeyHeap<>();
+
+        for(int i = 1; i < 1000; i++){
+            doubleHeap.insert(new DoubleKeyIntegerPair(i,i));
+        }
+        for(int i = 999; i > 0; i--){
+            doubleHeap2.insert(new DoubleKeyIntegerPair(i,i));
+        }
+
+        for(int i = 1; i< 1000; i++){
+            assertEquals(doubleHeap.pullSecondKey(), doubleHeap2.pullSecondKey());
+        }
+
+    }
+
+    @Test
+    public void randomMix(){
+        Random random = new Random();
+
+        doubleHeap = new DoubleKeyHeap<>();
+        DoubleKeyHeap<DoubleKeyIntegerPair> doubleHeap2 = new DoubleKeyHeap<>();
+
+        ArrayList<DoubleKeyIntegerPair> array1 = new ArrayList<>();
+        ArrayList<DoubleKeyIntegerPair> array2 = new ArrayList<>();
+
+        for(int i = 1; i < 10000; i++){
+            array1.add(new DoubleKeyIntegerPair(i,i));
+            array2.add(new DoubleKeyIntegerPair(i,i));
+        }
+
+        while (!array1.isEmpty()){
+            doubleHeap.insert(array1.remove(random.nextInt(array1.size())));
+            doubleHeap2.insert(array2.remove(random.nextInt(array2.size())));
+        }
+
+        while (doubleHeap.size()>1 && doubleHeap2.size()>1){
+            assertEquals(doubleHeap.pullFirstKey(), doubleHeap2.pullFirstKey());
+            assertEquals(doubleHeap.pullSecondKey(), doubleHeap2.pullSecondKey());
+        }
+
+
+    }
+
+
+    @Test
+    public void otherTypeTest(){
+        DoubleKeyHeap<DoubleKeyIntegerStringPair> doubleHeap = new DoubleKeyHeap<>();
+        doubleHeap.insert(new DoubleKeyIntegerStringPair(3,"C"));
+        doubleHeap.insert(new DoubleKeyIntegerStringPair(5,"A"));
+        doubleHeap.insert(new DoubleKeyIntegerStringPair(2,"D"));
+        doubleHeap.insert(new DoubleKeyIntegerStringPair(1,"E"));
+        doubleHeap.insert(new DoubleKeyIntegerStringPair(4,"B"));
+
+        assertEquals(doubleHeap.pullFirstKey(), new DoubleKeyIntegerStringPair(1,"E"));
+        assertEquals(doubleHeap.pullFirstKey(), new DoubleKeyIntegerStringPair(2,"D"));
+        assertEquals(doubleHeap.pullFirstKey(), new DoubleKeyIntegerStringPair(3,"C"));
+        assertEquals(doubleHeap.pullFirstKey(), new DoubleKeyIntegerStringPair(4,"B"));
+        assertEquals(doubleHeap.pullFirstKey(), new DoubleKeyIntegerStringPair(5,"A"));
     }
 }
