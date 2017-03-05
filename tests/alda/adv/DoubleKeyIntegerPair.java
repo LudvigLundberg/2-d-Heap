@@ -1,5 +1,7 @@
 package alda.adv;
 
+import java.util.Objects;
+
 public class DoubleKeyIntegerPair implements DoubleKeyInterface<Integer, Integer> {
 
     private Integer first;
@@ -21,6 +23,14 @@ public class DoubleKeyIntegerPair implements DoubleKeyInterface<Integer, Integer
     }
 
     @Override
+    public boolean equals(Object other){
+        if(other instanceof DoubleKeyIntegerPair){
+            return first.equals(((DoubleKeyIntegerPair) other).first) && second.equals(((DoubleKeyIntegerPair) other).second);
+        }
+        return false;
+    }
+
+    @Override
     public int compareFirstKey(DoubleKeyInterface other) {
          return this.first.compareTo(((DoubleKeyIntegerPair)other).first);
     }
@@ -28,5 +38,10 @@ public class DoubleKeyIntegerPair implements DoubleKeyInterface<Integer, Integer
     @Override
     public int compareSecondKey(DoubleKeyInterface other) {
         return this.second.compareTo(((DoubleKeyIntegerPair)other).second);
+    }
+
+    @Override
+    public String toString(){
+        return "{" +first.toString() + ", " + second.toString() + "}";
     }
 }
