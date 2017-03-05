@@ -9,7 +9,7 @@ import java.util.Random;
 import static org.junit.Assert.*;
 
 public class DoubleKeyHeapTest {
-    DoubleKeyHeap<DoubleKeyIntegerPair> doubleHeap = new DoubleKeyHeap<>();
+    private DoubleKeyHeap<DoubleKeyIntegerPair> doubleHeap = new DoubleKeyHeap<>();
 
     @Before
     public void setUp() throws Exception {
@@ -140,7 +140,7 @@ public class DoubleKeyHeapTest {
 
 
     @Test
-    public void otherTypeTest(){
+    public void otherTypeFirstTest(){
         DoubleKeyHeap<DoubleKeyIntegerStringPair> doubleHeap = new DoubleKeyHeap<>();
         doubleHeap.insert(new DoubleKeyIntegerStringPair(3,"C"));
         doubleHeap.insert(new DoubleKeyIntegerStringPair(5,"A"));
@@ -153,5 +153,91 @@ public class DoubleKeyHeapTest {
         assertEquals(doubleHeap.pullFirstKey(), new DoubleKeyIntegerStringPair(3,"C"));
         assertEquals(doubleHeap.pullFirstKey(), new DoubleKeyIntegerStringPair(4,"B"));
         assertEquals(doubleHeap.pullFirstKey(), new DoubleKeyIntegerStringPair(5,"A"));
+    }
+
+    @Test
+    public void otherTypeSecondTest(){
+        DoubleKeyHeap<DoubleKeyIntegerStringPair> doubleHeap = new DoubleKeyHeap<>();
+        doubleHeap.insert(new DoubleKeyIntegerStringPair(3,"C"));
+        doubleHeap.insert(new DoubleKeyIntegerStringPair(5,"A"));
+        doubleHeap.insert(new DoubleKeyIntegerStringPair(2,"D"));
+        doubleHeap.insert(new DoubleKeyIntegerStringPair(1,"E"));
+        doubleHeap.insert(new DoubleKeyIntegerStringPair(4,"B"));
+
+        assertEquals(doubleHeap.pullSecondKey(), new DoubleKeyIntegerStringPair(5,"A"));
+        assertEquals(doubleHeap.pullSecondKey(), new DoubleKeyIntegerStringPair(4,"B"));
+        assertEquals(doubleHeap.pullSecondKey(), new DoubleKeyIntegerStringPair(3,"C"));
+        assertEquals(doubleHeap.pullSecondKey(), new DoubleKeyIntegerStringPair(2,"D"));
+        assertEquals(doubleHeap.pullSecondKey(), new DoubleKeyIntegerStringPair(1,"E"));
+
+    }
+
+    @Test
+
+    public void otherTypeLargeFirstTest(){
+        Random random = new Random();
+
+        DoubleKeyHeap<DoubleKeyIntegerStringPair> doubleHeap = new DoubleKeyHeap<>();
+        DoubleKeyHeap<DoubleKeyIntegerStringPair> doubleHeap2 = new DoubleKeyHeap<>();
+
+        ArrayList<DoubleKeyIntegerStringPair> array1 = new ArrayList<>();
+        ArrayList<DoubleKeyIntegerStringPair> array2 = new ArrayList<>();
+
+        String string = "";
+        for(int i = 1; i < 100; i++){
+            string += "A";
+            array1.add(new DoubleKeyIntegerStringPair(i,string));
+            array2.add(new DoubleKeyIntegerStringPair(i,string));
+        }
+        while (!array1.isEmpty()){
+            doubleHeap.insert(array1.remove(random.nextInt(array1.size())));
+            doubleHeap2.insert(array2.remove(random.nextInt(array2.size())));
+        }
+        string = "";
+        for(int i = 1; i < 100; i++){
+            string += "A";
+            DoubleKeyIntegerStringPair temp = new DoubleKeyIntegerStringPair(i, string);
+            assertEquals(temp, doubleHeap.pullFirstKey());
+            assertEquals(temp, doubleHeap2.pullFirstKey());
+            temp = null;
+
+        }
+
+    }
+
+    @Test
+    public void otherTypeLargeSecondTest(){
+        Random random = new Random();
+
+        DoubleKeyHeap<DoubleKeyIntegerStringPair> doubleHeap = new DoubleKeyHeap<>();
+        DoubleKeyHeap<DoubleKeyIntegerStringPair> doubleHeap2 = new DoubleKeyHeap<>();
+
+        ArrayList<DoubleKeyIntegerStringPair> array1 = new ArrayList<>();
+        ArrayList<DoubleKeyIntegerStringPair> array2 = new ArrayList<>();
+
+        String string = "";
+        for(int i = 99; i > 0; i--){
+            string += "A";
+            array1.add(new DoubleKeyIntegerStringPair(i,string));
+            array2.add(new DoubleKeyIntegerStringPair(i,string));
+        }
+        while (!array1.isEmpty()){
+            doubleHeap.insert(array1.remove(random.nextInt(array1.size())));
+            doubleHeap2.insert(array2.remove(random.nextInt(array2.size())));
+        }
+        string = "";
+        for(int i = 99; i > 0; i--){
+            int tempInt = 100-i;
+            while (tempInt > 0){
+                string += "A";
+                tempInt--;
+            }
+            DoubleKeyIntegerStringPair temp = new DoubleKeyIntegerStringPair(i, string);
+            assertEquals(temp, doubleHeap.pullSecondKey());
+            assertEquals(temp, doubleHeap2.pullSecondKey());
+            string = "";
+
+        }
+
     }
 }

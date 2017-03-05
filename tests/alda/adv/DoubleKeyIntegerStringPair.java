@@ -28,4 +28,12 @@ public class DoubleKeyIntegerStringPair implements DoubleKeyInterface<Integer, S
     public int compareSecondKey(DoubleKeyInterface other) {
         return this.second.compareTo(((DoubleKeyIntegerStringPair)other).second);
     }
+
+    @Override
+    public boolean equals(Object other){
+        if(other instanceof DoubleKeyIntegerStringPair){
+            return first.equals(((DoubleKeyIntegerStringPair) other).first) && second.equals(((DoubleKeyIntegerStringPair) other).second);
+        }
+        return false;
+    }
 }

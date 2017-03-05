@@ -1,5 +1,11 @@
 package alda.adv;
 
+/**
+ *
+ * @author Ludvig Lundberg
+ * @param <K> an object that implements the DoubleKeyInterface
+ */
+
 public class DoubleKeyHeap<K extends DoubleKeyInterface>{
     private final static int INITIAL_CAPACITY = 10;
     private final static int NODES = 2;
@@ -12,8 +18,9 @@ public class DoubleKeyHeap<K extends DoubleKeyInterface>{
     }
 
     /**
-     *
-     * @return
+     * Pull the value with the highest first key priority from the Heap.
+     * @return The element with the highest priority comparing the first key.
+     * @throws IllegalStateException When the method is invoked on a empty heap.
      */
 
     public K pullFirstKey(){
@@ -21,7 +28,6 @@ public class DoubleKeyHeap<K extends DoubleKeyInterface>{
             K returnValue = (K) array[1];
             array[1] = array[size--];
             percolateDown(1);
-
             return returnValue;
 
         }
@@ -31,13 +37,13 @@ public class DoubleKeyHeap<K extends DoubleKeyInterface>{
     }
 
     /**
-     *
-     * @return
+     * Pull the value with the highest second key priority from the Heap.
+     * @return The element with the highest priority comparing the second key.
+     * @throws IllegalStateException When the method is invoked on a empty heap.
      */
 
     public K pullSecondKey() {
         if(!isEmpty()){
-
             int highestPriorityIndex = 1;
             int i = 1;
             while (i < size+1 && i < 4 ){
@@ -49,9 +55,7 @@ public class DoubleKeyHeap<K extends DoubleKeyInterface>{
 
             K returnValue = (K) array[highestPriorityIndex];
             array[highestPriorityIndex] = array[size--];
-
             percolateDown(highestPriorityIndex);
-
             return returnValue;
 
         }
@@ -61,8 +65,9 @@ public class DoubleKeyHeap<K extends DoubleKeyInterface>{
     }
 
     /**
-     *
-     * @param x
+     * Adds the specified element to the Heap, depending on the priority of the item, the heap structure might change.
+     * @param x The item to be inserted.
+     * @throws IllegalArgumentException when inserted value is null;
      */
 
     public void insert(K x){
@@ -71,8 +76,6 @@ public class DoubleKeyHeap<K extends DoubleKeyInterface>{
         if(size == array.length-1){
             enlargeArray();
         }
-        //Add x to Last place
-        //percolate up
 
         array[++size] = x;
         percolateUp(size);
@@ -80,8 +83,11 @@ public class DoubleKeyHeap<K extends DoubleKeyInterface>{
     }
 
     /**
-     *
-     * @param index
+     * Private helper method that takes an index in the array, and then compares the key with the index children and grandchildren.
+     * The method compares the index key to all children and grandchildren of a node and if there is one with higher-priority, it exchanges these indexes and recursively continuous
+     * Which key it compares to the children or the grandchildren depends on which height the index currently is at.
+     * The method continues until the item is at the correct height, or there are no children left to compare with.
+     * @param index the index to be percolated downwards.
      */
 
     private void percolateDown(int index){
@@ -123,20 +129,16 @@ public class DoubleKeyHeap<K extends DoubleKeyInterface>{
             percolateDown(highestPriority);
         }
 
-
-        //get the last element in the array add to hole
-        //compare key with children and grandchildren, switch with highest priority, keep on until no children.
     }
 
     /**
-     *
-     * @param index
+     * Private helper method that takes an index in the array, and then compares the key with the index grandparents and grandparents.
+     * If the item att index should be moved up in the heap, the method will exchange these values and recursively keep on going until no switches has been made,
+     * or the top of the heap has been reached.
+     * @param index the index in the array that will be percolated up.
      */
 
     private void percolateUp(int index){
-        //check if x.key1 has higher priority than grandparent, if true, switch
-        //else, check if x.key2 has higher priority than parent, if true, switch
-        //if both is false or cant move up more, break
 
         boolean evenHeight = evenHeight(index);
 
@@ -166,12 +168,13 @@ public class DoubleKeyHeap<K extends DoubleKeyInterface>{
     }
 
     /**
-     *
-     * @param index
-     * @param parentIndex
-     * @param even
-     * @return
+     * Compares two indexes in the internal array.
+     * @param index index of the node to be compared.
+     * @param parentIndex index of the parental node.
+     * @param even a boolean containing whether the comparison shall be made with the even key or not.
+     * @return -1 if the index is less than the parent, 0 if they are the same, and 1 if the parent is less than the index.
      */
+
     private int compareWithIndex(int index, int parentIndex, boolean even){
         if(even) {
             return array[index].compareSecondKey(array[parentIndex]);
@@ -182,9 +185,9 @@ public class DoubleKeyHeap<K extends DoubleKeyInterface>{
     }
 
     /**
-     *
-     * @param first
-     * @param second
+     * Changes elements of two given indexes.
+     * @param first index of the first element
+     * @param second index of the first element
      */
 
     private void exchange(int first, int second){
@@ -209,7 +212,7 @@ public class DoubleKeyHeap<K extends DoubleKeyInterface>{
     }
 
     /**
-     *
+     * Doubles the size of the array.
      */
 
     private void enlargeArray(){
@@ -221,8 +224,7 @@ public class DoubleKeyHeap<K extends DoubleKeyInterface>{
     }
 
     /**
-     *
-     * @return
+     * @return True if the heap is empty.
      */
 
     public boolean isEmpty() {
@@ -230,8 +232,7 @@ public class DoubleKeyHeap<K extends DoubleKeyInterface>{
     }
 
     /**
-     *
-     * @return
+     * @return The numbers of elements in the heap.
      */
 
     public int size(){
